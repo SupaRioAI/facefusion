@@ -27,7 +27,7 @@ Usage
 Run the command:
 
 ```
-python run.py [options]
+python app.py [options]
 
 options:
   -h, --help                                                                                                         show this help message and exit
