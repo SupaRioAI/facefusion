@@ -331,7 +331,7 @@ def cli() -> None:
         help=wording.get("ui_layouts_help").format(
             choices=", ".join(list_module_names("facefusion/uis/layouts"))
         ),
-        default=["webcam"],
+        default=["supa"],
         nargs="+",
     )
     run(program)
