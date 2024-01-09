@@ -35,6 +35,28 @@ def render() -> gradio.Blocks:
         with gradio.Row():
             with gradio.Column(scale=2):
                 with gradio.Blocks():
+                    source.render()
+                with gradio.Blocks():
+                    target.render()
+                with gradio.Blocks():
+                    output_options.render()
+                with gradio.Blocks():
+                    output.render()
+            with gradio.Column(scale=3):
+                with gradio.Blocks():
+                    preview.render()
+                with gradio.Blocks():
+                    trim_frame.render()
+                with gradio.Blocks():
+                    output_multiple.render()
+            with gradio.Column(scale=2):
+                with gradio.Blocks():
+                    face_selector.render()
+                with gradio.Blocks():
+                    face_masker.render()
+                with gradio.Blocks():
+                    face_analyser.render()
+                with gradio.Blocks():
                     frame_processors.render()
                     frame_processors_options.render()
                 with gradio.Blocks():
@@ -46,29 +68,7 @@ def render() -> gradio.Blocks:
                 with gradio.Blocks():
                     temp_frame.render()
                 with gradio.Blocks():
-                    output_options.render()
-                with gradio.Blocks():
                     common_options.render()
-                with gradio.Blocks():
-                    output_multiple.render()
-            with gradio.Column(scale=2):
-                with gradio.Blocks():
-                    source.render()
-                with gradio.Blocks():
-                    target.render()
-                with gradio.Blocks():
-                    output.render()
-            with gradio.Column(scale=3):
-                with gradio.Blocks():
-                    preview.render()
-                with gradio.Blocks():
-                    trim_frame.render()
-                with gradio.Blocks():
-                    face_selector.render()
-                with gradio.Blocks():
-                    face_masker.render()
-                with gradio.Blocks():
-                    face_analyser.render()
     return layout
 
 
