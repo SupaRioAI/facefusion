@@ -125,7 +125,7 @@ def cli() -> None:
         "--execution-thread-count",
         help=wording.get("execution_thread_count_help"),
         type=int,
-        default=12,
+        default=32,
         choices=facefusion.choices.execution_thread_count_range,
         metavar=create_metavar(facefusion.choices.execution_thread_count_range),
     )
@@ -133,7 +133,7 @@ def cli() -> None:
         "--execution-queue-count",
         help=wording.get("execution_queue_count_help"),
         type=int,
-        default=1,
+        default=4,
         choices=facefusion.choices.execution_queue_count_range,
         metavar=create_metavar(facefusion.choices.execution_queue_count_range),
     )
