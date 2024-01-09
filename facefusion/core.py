@@ -76,24 +76,15 @@ def cli() -> None:
     program.add_argument(
         "-s",
         "--source",
-        help=wording.get("source_help"),
         action="append",
+        help=wording.get("source_help"),
         dest="source_paths",
-        default=config.get_str_list("general.source_paths"),
     )
     program.add_argument(
-        "-t",
-        "--target",
-        help=wording.get("target_help"),
-        dest="target_path",
-        default=config.get_str_value("general.target_path"),
+        "-t", "--target", help=wording.get("target_help"), dest="target_path"
     )
     program.add_argument(
-        "-o",
-        "--output",
-        help=wording.get("output_help"),
-        dest="output_path",
-        default=config.get_str_value("general.output_path"),
+        "-o", "--output", help=wording.get("output_help"), dest="output_path"
     )
     program.add_argument(
         "-v",
@@ -104,21 +95,15 @@ def cli() -> None:
     # misc
     group_misc = program.add_argument_group("misc")
     group_misc.add_argument(
-        "--skip-download",
-        help=wording.get("skip_download_help"),
-        action="store_true",
-        default=config.get_bool_value("misc.skip_download"),
+        "--skip-download", help=wording.get("skip_download_help"), action="store_true"
     )
     group_misc.add_argument(
-        "--headless",
-        help=wording.get("headless_help"),
-        action="store_true",
-        default=config.get_bool_value("misc.headless"),
+        "--headless", help=wording.get("headless_help"), action="store_true"
     )
     group_misc.add_argument(
         "--log-level",
         help=wording.get("log_level_help"),
-        default=config.get_str_value("misc.log_level", "info"),
+        default="info",
         choices=logger.get_log_levels(),
     )
     # execution
@@ -164,38 +149,36 @@ def cli() -> None:
     group_face_analyser.add_argument(
         "--face-analyser-order",
         help=wording.get("face_analyser_order_help"),
-        default=config.get_str_value("face_analyser.face_analyser_order", "left-right"),
+        default="left-right",
         choices=facefusion.choices.face_analyser_orders,
     )
     group_face_analyser.add_argument(
         "--face-analyser-age",
         help=wording.get("face_analyser_age_help"),
-        default=config.get_str_value("face_analyser.face_analyser_age"),
         choices=facefusion.choices.face_analyser_ages,
     )
     group_face_analyser.add_argument(
         "--face-analyser-gender",
         help=wording.get("face_analyser_gender_help"),
-        default=config.get_str_value("face_analyser.face_analyser_gender"),
         choices=facefusion.choices.face_analyser_genders,
     )
     group_face_analyser.add_argument(
         "--face-detector-model",
         help=wording.get("face_detector_model_help"),
-        default=config.get_str_value("face_analyser.face_detector_model", "retinaface"),
+        default="retinaface",
         choices=facefusion.choices.face_detector_models,
     )
     group_face_analyser.add_argument(
         "--face-detector-size",
         help=wording.get("face_detector_size_help"),
-        default=config.get_str_value("face_analyser.face_detector_size", "640x640"),
+        default="640x640",
         choices=facefusion.choices.face_detector_sizes,
     )
     group_face_analyser.add_argument(
         "--face-detector-score",
         help=wording.get("face_detector_score_help"),
         type=float,
-        default=config.get_float_value("face_analyser.face_detector_score", "0.5"),
+        default=0.5,
         choices=facefusion.choices.face_detector_score_range,
         metavar=create_metavar(facefusion.choices.face_detector_score_range),
     )
@@ -267,36 +250,27 @@ def cli() -> None:
     # frame extraction
     group_frame_extraction = program.add_argument_group("frame extraction")
     group_frame_extraction.add_argument(
-        "--trim-frame-start",
-        help=wording.get("trim_frame_start_help"),
-        type=int,
-        default=facefusion.config.get_int_value("frame_extraction.trim_frame_start"),
+        "--trim-frame-start", help=wording.get("trim_frame_start_help"), type=int
     )
     group_frame_extraction.add_argument(
-        "--trim-frame-end",
-        help=wording.get("trim_frame_end_help"),
-        type=int,
-        default=facefusion.config.get_int_value("frame_extraction.trim_frame_end"),
+        "--trim-frame-end", help=wording.get("trim_frame_end_help"), type=int
     )
     group_frame_extraction.add_argument(
         "--temp-frame-format",
         help=wording.get("temp_frame_format_help"),
-        default=config.get_str_value("frame_extraction.temp_frame_format", "jpg"),
+        default="jpg",
         choices=facefusion.choices.temp_frame_formats,
     )
     group_frame_extraction.add_argument(
         "--temp-frame-quality",
         help=wording.get("temp_frame_quality_help"),
         type=int,
-        default=config.get_int_value("frame_extraction.temp_frame_quality", "100"),
+        default=100,
         choices=facefusion.choices.temp_frame_quality_range,
         metavar=create_metavar(facefusion.choices.temp_frame_quality_range),
     )
     group_frame_extraction.add_argument(
-        "--keep-temp",
-        help=wording.get("keep_temp_help"),
-        action="store_true",
-        default=config.get_bool_value("frame_extraction.keep_temp"),
+        "--keep-temp", help=wording.get("keep_temp_help"), action="store_true"
     )
     # output creation
     group_output_creation = program.add_argument_group("output creation")
@@ -329,7 +303,9 @@ def cli() -> None:
         "--skip-audio", help=wording.get("skip_audio_help"), action="store_true"
     )
     # frame processors
-    available_frame_processors = list_directory("facefusion/processors/frame/modules")
+    available_frame_processors = list_module_names(
+        "facefusion/processors/frame/modules"
+    )
     program = ArgumentParser(
         parents=[program], formatter_class=program.formatter_class, add_help=True
     )
@@ -339,23 +315,20 @@ def cli() -> None:
         help=wording.get("frame_processors_help").format(
             choices=", ".join(available_frame_processors)
         ),
-        default=config.get_str_list(
-            "frame_processors.frame_processors", "face_swapper"
-        ),
+        default=["face_swapper", "face_enhancer"],
         nargs="+",
     )
     for frame_processor in available_frame_processors:
         frame_processor_module = load_frame_processor_module(frame_processor)
         frame_processor_module.register_args(group_frame_processors)
     # uis
-    available_ui_layouts = list_directory("facefusion/uis/layouts")
     group_uis = program.add_argument_group("uis")
     group_uis.add_argument(
         "--ui-layouts",
         help=wording.get("ui_layouts_help").format(
-            choices=", ".join(available_ui_layouts)
+            choices=", ".join(list_module_names("facefusion/uis/layouts"))
         ),
-        default=config.get_str_list("uis.ui_layout", "default"),
+        default=["default"],
         nargs="+",
     )
     run(program)
