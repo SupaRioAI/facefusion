@@ -297,7 +297,10 @@ def cli() -> None:
         metavar=create_metavar(facefusion.choices.output_video_quality_range),
     )
     group_output_creation.add_argument(
-        "--keep-fps", help=wording.get("keep_fps_help"), action="store_true"
+        "--keep-fps",
+        help=wording.get("keep_fps_help"),
+        default=True,
+        action="store_true",
     )
     group_output_creation.add_argument(
         "--skip-audio", help=wording.get("skip_audio_help"), action="store_true"
