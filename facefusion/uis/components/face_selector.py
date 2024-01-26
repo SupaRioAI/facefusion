@@ -27,7 +27,7 @@ def render() -> None:
 	{
 		'label': wording.get('reference_face_gallery_label'),
 		'object_fit': 'cover',
-		'columns': 8,
+		'columns': 16,
 		'allow_preview': False,
 		'visible': 'reference' in facefusion.globals.face_selector_mode
 	}

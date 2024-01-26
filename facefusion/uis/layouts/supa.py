@@ -10,6 +10,7 @@ from facefusion.uis.components import (
     output_options,
     common_options,
     source,
+    memory,
     target,
     output,
     output_multiple,
@@ -63,6 +64,8 @@ def render() -> gradio.Blocks:
                     execution_thread_count.render()
                     execution_queue_count.render()
                 with gradio.Blocks():
+                    memory.render()
+                with gradio.Blocks():
                     temp_frame.render()
                 with gradio.Blocks():
                     common_options.render()
@@ -74,6 +77,7 @@ def listen() -> None:
     frame_processors_options.listen()
     execution.listen()
     execution_thread_count.listen()
+    memory.listen()
     execution_queue_count.listen()
     temp_frame.listen()
     output_options.listen()
