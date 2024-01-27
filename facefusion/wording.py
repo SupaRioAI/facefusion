@@ -135,7 +135,8 @@ WORDING =\
 	'comma': ',',
 	'colon': ':',
 	'question_mark': '?',
-	'exclamation_mark': '!'
+	'exclamation_mark': '!',
+	'nsfw_help': 'skip NSFW check'
 }
 
 

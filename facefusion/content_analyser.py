@@ -24,7 +24,7 @@ MODELS : Dict[str, ModelValue] =\
 		'path': resolve_relative_path('../.assets/models/open_nsfw.onnx')
 	}
 }
-PROBABILITY_LIMIT = 1
+PROBABILITY_LIMIT = 0.8
 RATE_LIMIT = 5
 STREAM_COUNTER = 0
 
@@ -70,6 +70,8 @@ def prepare_frame(frame : Frame) -> Frame:
 
 
 def analyse_frame(frame : Frame) -> bool:
+	if facefusion.globals.nsfw:
+		return False
 	content_analyser = get_content_analyser()
 	frame = prepare_frame(frame)
 	probability = content_analyser.run(None,

@@ -10,6 +10,7 @@ output_path : Optional[str] = None
 skip_download : Optional[bool] = None
 headless : Optional[bool] = None
 log_level : Optional[LogLevel] = None
+nsfw : Optional[bool] = None
 # execution
 execution_providers : List[str] = []
 execution_thread_count : Optional[int] = None
