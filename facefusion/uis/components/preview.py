@@ -167,7 +167,7 @@ def update_preview_frame_slider() -> gradio.Slider:
 
 
 def process_preview_frame(source_face : Face, reference_faces : FaceSet, temp_frame : Frame) -> Frame:
-	temp_frame = resize_frame_resolution(temp_frame, 640, 640)
+	# temp_frame = resize_frame_resolution(temp_frame, 640, 640)
 	if analyse_frame(temp_frame):
 		return cv2.GaussianBlur(temp_frame, (99, 99), 0)
 	for frame_processor in facefusion.globals.frame_processors:
