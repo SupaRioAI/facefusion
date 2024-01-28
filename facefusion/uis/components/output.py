@@ -1,6 +1,5 @@
 from typing import Tuple, Optional
 import gradio
-import os
 import cv2
 
 import facefusion.globals

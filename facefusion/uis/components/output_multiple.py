@@ -1,5 +1,4 @@
 import os
-from typing import Tuple
 import gradio
 
 import facefusion.globals
@@ -12,7 +11,6 @@ from facefusion.filesystem import is_image, is_video
 def render() -> None:
     global INPUT_FILE_MULTIPLE
     global OUTPUT_FILE_MULTIPLE
-    global FILE_MULTIPLE_TEXTBOX
     global FILE_MULTIPLE_SHOW
 
     root = os.path.dirname(get_ui_component("output_path_textbox").value)
@@ -44,8 +42,10 @@ def listen() -> None:
         FILE_MULTIPLE_SHOW.click(start_batch, inputs = [output_path_textbox, INPUT_FILE_MULTIPLE], outputs = OUTPUT_FILE_MULTIPLE)
     OUTPUT_FILE_MULTIPLE.change(display_output, inputs = OUTPUT_FILE_MULTIPLE, outputs = [output.OUTPUT_IMAGE, output.OUTPUT_VIDEO])
     
+    
 def glob_style(output_paths) -> str:
     return f"{os.path.basename(output_paths)}/*.*" 
+
 
 def display_output(output_path):
     if is_image(output_path):
@@ -65,11 +65,12 @@ def create_output_directory(output_path) -> str:
     try: 
         os.makedirs(output_dir, exist_ok = False) 
         logger.info("Directory '%s' created successfully" % output_dir, __name__.upper()) 
-    except FileExistsError as e:
+    except FileExistsError:
         logger.info("Directory '%s' already exists" % output_dir, __name__.upper())   
-    except OSError as error: 
+    except OSError: 
         logger.error("Directory '%s' can not be created" % output_dir, __name__.upper())  
     return output_dir 
+
 
 def start_batch(output_path : str, file_explorer) -> str:
     for target in file_explorer:
