@@ -3,7 +3,7 @@ from typing import Tuple
 import gradio
 
 import facefusion.globals
-from facefusion import logger
+from facefusion import logger, vision
 from facefusion.uis.core import get_ui_component
 from facefusion.uis.components import output
 from facefusion.filesystem import is_image, is_video
@@ -75,6 +75,13 @@ def start_batch(output_path : str, file_explorer) -> str:
     for target in file_explorer:
         facefusion.globals.target_path = target
         output_dir = create_output_directory(output_path)
+        # facefusion.globals.target_path = '/var/folders/7w/q3szlh0x1z57bf3g82fxglx80000gn/T/gradio/f8d8dc0372f307a418ca42f49e592ad604ab5e8d/twittervid.com_fc5c8a.mp4'
+        facefusion.globals.output_video_fps = vision.detect_video_fps(target)
+        facefusion.globals.trim_frame_start = None
+        facefusion.globals.trim_frame_end = vision.count_video_frame_total(target)
+        facefusion.globals.output_video_resolution = vision.detect_video_resolution(target)
+        # for v in facefusion.globals.__dict__.items():
+        #     print(v)
         output_image, output_video = output.start(output_dir)
     # TODO: output_dir could be multiple dir 
     return gradio.update(root=output_path, glob=glob_style(output_dir), visible=True)
