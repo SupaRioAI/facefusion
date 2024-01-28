@@ -15,11 +15,12 @@ def render() -> None:
     global FILE_MULTIPLE_TEXTBOX
     global FILE_MULTIPLE_SHOW
 
+    root = os.path.dirname(get_ui_component("output_path_textbox").value)
     INPUT_FILE_MULTIPLE = gradio.FileExplorer(
         label='TARGETS',
         glob="**/*.*",
         ignore_glob="**/.*",
-        root="/Users/cyan/MEGA/DF/",
+        root=root,
         file_count="multiple",
         height=400,
     )
@@ -27,7 +28,7 @@ def render() -> None:
         label='OUTPUTS',
         glob="**/*.*",
         ignore_glob="**/.*",
-        root="/Users/cyan/MEGA/DF/Output",
+        root=root,
         file_count="single",
         height=400,
         visible=False,
