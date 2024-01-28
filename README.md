@@ -104,3 +104,9 @@ Documentation
 -------------
 
 Read the [documentation](https://docs.facefusion.io) for a deep dive.
+
+```yml
+sdk: gradio
+sdk_version: 3.50.2
+app_file: run.py
+```
