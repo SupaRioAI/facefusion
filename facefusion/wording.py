@@ -136,6 +136,7 @@ WORDING =\
 	'colon': ':',
 	'question_mark': '?',
 	'exclamation_mark': '!',
+	'overwrite_help': 'overwrite output file',
 	'nsfw_help': 'skip NSFW check'
 }
 

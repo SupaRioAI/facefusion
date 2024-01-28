@@ -45,6 +45,7 @@ def cli() -> None:
 	group_misc.add_argument('--skip-download', help = wording.get('skip_download_help'), action = 'store_true', default = config.get_bool_value('misc.skip_download'))
 	group_misc.add_argument('--headless', help = wording.get('headless_help'), action = 'store_true', default = config.get_bool_value('misc.headless'))
 	group_misc.add_argument('--log-level', help = wording.get('log_level_help'), default = config.get_str_value('misc.log_level', 'info'), choices = logger.get_log_levels())
+	group_misc.add_argument('--overwrite', help = wording.get('overwrite_help'), action = 'store_true', default = config.get_bool_value('misc.overwrite'))
 	group_misc.add_argument('--nsfw', help = wording.get('nsfw_help'), action = 'store_true', default = config.get_bool_value('misc.nsfw'))
 	# execution
 	execution_providers = encode_execution_providers(onnxruntime.get_available_providers())
@@ -117,6 +118,7 @@ def apply_args(program : ArgumentParser) -> None:
 	facefusion.globals.skip_download = args.skip_download
 	facefusion.globals.headless = args.headless
 	facefusion.globals.log_level = args.log_level
+	facefusion.globals.nsfw = args.overwrite
 	facefusion.globals.nsfw = args.nsfw
 	# execution
 	facefusion.globals.execution_providers = decode_execution_providers(args.execution_providers)
