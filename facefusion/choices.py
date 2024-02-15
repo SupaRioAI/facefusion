@@ -1,6 +1,6 @@
 from typing import List
 
-from facefusion.typing import VideoMemoryStrategy, FaceSelectorMode, FaceAnalyserOrder, FaceAnalyserAge, FaceAnalyserGender, FaceMaskType, FaceMaskRegion, TempFrameFormat, OutputVideoEncoder, OutputVideoPreset
+from facefusion.typing import VideoMemoryStrategy, FaceSelectorMode, FaceAnalyserOrder, FaceAnalyserAge, FaceAnalyserGender, FaceMaskType, FaceMaskRegion, TempFrameFormat, OutputVideoEncoder, OutputVideoPreset, SeekRange
 from facefusion.common_helper import create_int_range, create_float_range
 
 video_memory_strategies : List[VideoMemoryStrategy] = [ 'strict', 'moderate', 'tolerant' ]
@@ -15,6 +15,7 @@ face_mask_regions : List[FaceMaskRegion] = [ 'skin', 'left-eyebrow', 'right-eyeb
 temp_frame_formats : List[TempFrameFormat] = [ 'jpg', 'png', 'bmp' ]
 output_video_encoders : List[OutputVideoEncoder] = [ 'libx264', 'libx265', 'libvpx-vp9', 'h264_nvenc', 'hevc_nvenc' ]
 output_video_presets : List[OutputVideoPreset] = [ 'ultrafast', 'superfast', 'veryfast', 'faster', 'fast', 'medium', 'slow', 'slower', 'veryslow' ]
+preview_seak_seconds_range: List[SeekRange] = [0.1, 0.5, 1, 2, 5, 10, 30, 120]
 
 video_template_sizes : List[int] = [ 240, 360, 480, 540, 720, 1080, 1440, 2160 ]
 

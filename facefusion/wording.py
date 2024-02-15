@@ -137,7 +137,9 @@ WORDING =\
 	'question_mark': '?',
 	'exclamation_mark': '!',
 	'overwrite_help': 'overwrite output file',
-	'nsfw_help': 'skip NSFW check'
+	'nsfw_help': 'skip NSFW check',
+	'seak_help': 'click preview to seek seconds ahead',
+	'seak_checkbox_group_label': 'CLICK PREVIEW TO SEEK SECONDS AHEAD'
 }
 
 

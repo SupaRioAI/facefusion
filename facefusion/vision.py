@@ -39,6 +39,10 @@ def detect_video_fps(video_path : str) -> Optional[float]:
 			return video_fps
 	return None
 
+def count_video_second_total(video_path: str) -> float:
+    if is_video(video_path):
+        return count_video_frame_total(video_path)/detect_video_fps(video_path)
+    return None
 
 def detect_video_resolution(video_path : str) -> Optional[Tuple[float, float]]:
 	if is_video(video_path):

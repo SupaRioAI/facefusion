@@ -49,6 +49,7 @@ FaceMaskRegion = Literal['skin', 'left-eyebrow', 'right-eyebrow', 'left-eye', 'r
 TempFrameFormat = Literal['jpg', 'png', 'bmp']
 OutputVideoEncoder = Literal['libx264', 'libx265', 'libvpx-vp9', 'h264_nvenc', 'hevc_nvenc']
 OutputVideoPreset = Literal['ultrafast', 'superfast', 'veryfast', 'faster', 'fast', 'medium', 'slow', 'slower', 'veryslow']
+SeekRange = Literal['0.1s', '0.5s', '1s', '2s', '5s', '10s', '30s', '2m']
 
 ModelValue = Dict[str, Any]
 ModelSet = Dict[str, ModelValue]

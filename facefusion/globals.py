@@ -12,6 +12,7 @@ headless : Optional[bool] = None
 log_level : Optional[LogLevel] = None
 overwrite : Optional[bool] = None
 nsfw : Optional[bool] = None
+seek : Optional[float] = None
 # execution
 execution_providers : List[str] = []
 execution_thread_count : Optional[int] = None

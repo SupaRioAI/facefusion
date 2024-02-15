@@ -1,14 +1,15 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 from time import sleep
 import cv2
 import gradio
 
 import facefusion.globals
+import facefusion.choices
 from facefusion import wording, logger
 from facefusion.core import conditional_append_reference_faces
 from facefusion.face_store import clear_static_faces, get_reference_faces, clear_reference_faces
 from facefusion.typing import Frame, Face, FaceSet
-from facefusion.vision import get_video_frame, count_video_frame_total, normalize_frame_color, read_static_image, read_static_images
+from facefusion.vision import get_video_frame, count_video_frame_total, detect_video_fps, count_video_second_total, normalize_frame_color, read_static_image, read_static_images
 from facefusion.filesystem import is_image, is_video
 from facefusion.face_analyser import get_average_face, clear_face_analyser
 from facefusion.content_analyser import analyse_frame
@@ -18,11 +19,13 @@ from facefusion.uis.core import get_ui_component, register_ui_component
 
 PREVIEW_IMAGE : Optional[gradio.Image] = None
 PREVIEW_FRAME_SLIDER : Optional[gradio.Slider] = None
+PREVIEW_SEEK_CHECKBOX_GROUP : Optional[gradio.CheckboxGroup] = None
 
 
 def render() -> None:
 	global PREVIEW_IMAGE
 	global PREVIEW_FRAME_SLIDER
+	global PREVIEW_SEEK_CHECKBOX_GROUP
 
 	preview_image_args: Dict[str, Any] =\
 	{
@@ -35,6 +38,13 @@ def render() -> None:
 		'step': 1,
 		'minimum': 0,
 		'maximum': 100,
+		'visible': False
+	}
+	preview_seek_check_group_args: Dict[str, Any] =\
+	{
+		'label': wording.get('seak_checkbox_group_label'),
+		'choices': facefusion.choices.preview_seak_seconds_range,
+		'value': [('1s', facefusion.globals.seek)],
 		'visible': False
 	}
 	conditional_append_reference_faces()
@@ -54,11 +64,15 @@ def render() -> None:
 		preview_frame_slider_args['maximum'] = count_video_frame_total(facefusion.globals.target_path)
 		preview_frame_slider_args['visible'] = True
 	PREVIEW_IMAGE = gradio.Image(**preview_image_args)
+	PREVIEW_SEEK_CHECKBOX_GROUP = gradio.CheckboxGroup(**preview_seek_check_group_args)
 	PREVIEW_FRAME_SLIDER = gradio.Slider(**preview_frame_slider_args)
 	register_ui_component('preview_frame_slider', PREVIEW_FRAME_SLIDER)
+	register_ui_component('seak_checkbox_group_label', PREVIEW_SEEK_CHECKBOX_GROUP)
 
 
 def listen() -> None:
+	PREVIEW_IMAGE.select(seek_to_frame, inputs = [PREVIEW_SEEK_CHECKBOX_GROUP, PREVIEW_FRAME_SLIDER], outputs = [PREVIEW_FRAME_SLIDER, PREVIEW_IMAGE])
+	PREVIEW_SEEK_CHECKBOX_GROUP.input(update_seek_checkbox_selection, inputs = PREVIEW_SEEK_CHECKBOX_GROUP, outputs = PREVIEW_SEEK_CHECKBOX_GROUP)	
 	PREVIEW_FRAME_SLIDER.release(update_preview_image, inputs = PREVIEW_FRAME_SLIDER, outputs = PREVIEW_IMAGE)
 	multi_one_component_names : List[ComponentName] =\
 	[
@@ -81,6 +95,7 @@ def listen() -> None:
 		if component:
 			for method in [ 'upload', 'change', 'clear' ]:
 				getattr(component, method)(update_preview_frame_slider, outputs = PREVIEW_FRAME_SLIDER)
+				getattr(component, method)(update_seek_checkbox_value, outputs = PREVIEW_SEEK_CHECKBOX_GROUP)
 	select_component_names : List[ComponentName] =\
 	[
 		'reference_face_position_gallery',
@@ -165,6 +180,38 @@ def update_preview_frame_slider() -> gradio.Slider:
 		return gradio.Slider(maximum = video_frame_total, visible = True)
 	return gradio.Slider(value = None, maximum = None, visible = False)
 
+def	update_seek_checkbox_value() -> gradio.CheckboxGroup:
+	# visible
+	if not is_video(facefusion.globals.target_path):
+		return gradio.CheckboxGroup(visible = False) 
+	visible = True
+	# value
+	total_seconds = count_video_second_total(facefusion.globals.target_path)
+	value = facefusion.globals.seek
+	if total_seconds < value:
+		value = facefusion.choices.preview_seak_seconds_range[0]
+		facefusion.globals.seek = value
+	# choices
+	choices = facefusion.choices.preview_seak_seconds_range.copy()
+	for s in reversed(facefusion.choices.preview_seak_seconds_range):
+		if total_seconds < s:
+			choices.pop(-1)
+	if not bool(choices):
+		facefusion.globals.seek = 0
+		return gradio.CheckboxGroup(value = None, visible = False)
+	return gradio.CheckboxGroup(value = [value], choices = choices, visible = visible)
+
+def update_seek_checkbox_selection(selected: list) -> gradio.CheckboxGroup:
+    if len(selected) != 2 or facefusion.globals.seek not in selected:
+        return gradio.CheckboxGroup(value=[facefusion.globals.seek])
+    selected.remove(facefusion.globals.seek)
+    facefusion.globals.seek = selected[0]
+    return gradio.CheckboxGroup(value=selected)
+
+def seek_to_frame(seek: list, current_frame: int) -> Tuple[gradio.Slider, gradio.Image] :
+	seek_frame = round(seek[0] * detect_video_fps(facefusion.globals.target_path))
+	next_frame = (current_frame + seek_frame) % count_video_frame_total(facefusion.globals.target_path)
+	return gradio.Slider(value=next_frame), update_preview_image(next_frame)
 
 def process_preview_frame(source_face : Face, reference_faces : FaceSet, temp_frame : Frame) -> Frame:
 	if analyse_frame(temp_frame):
